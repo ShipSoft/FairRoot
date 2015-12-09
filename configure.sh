@@ -16,9 +16,8 @@ distribution=$(lsb_release -is)
 version=$(lsb_release -rs | cut -f1 -d.)     
 
 if [ "$distribution$version" = "ScientificCERNSLC6" ]; then
- # operating system of last century
-  source scl_source enable python27
-  source scl_source enable devtoolset-3
+ # operating system of last century, need newer gcc / python
+  eval `/afs/cern.ch/sw/lcg/releases/lcgenv/latest/lcgenv -p /afs/cern.ch/sw/lcg/releases/LCG_82 x86_64-slc6-gcc49-opt Python`
 fi
 
 if [ ! -d build ]; then
@@ -30,7 +29,8 @@ cd build
 export PATH=$SIMPATH/bin:$PATH
 if [ "$distribution$version" = "ScientificCERNSLC6" ]; then
  xx=$($SIMPATH/bin/fairsoft-config --cxx)
- cmake .. -DCMAKE_INSTALL_PREFIX=$installDir -DCMAKE_CXX_COMPILER=$xx
+ yy=$($SIMPATH/bin/fairsoft-config --cc)
+ cmake .. -DCMAKE_INSTALL_PREFIX=$installDir -DCMAKE_CXX_COMPILER=$xx -DCMAKE_C_COMPILER=$yy
 else
  cmake .. -DCMAKE_INSTALL_PREFIX=$installDir
 fi 
