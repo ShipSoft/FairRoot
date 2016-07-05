@@ -93,7 +93,7 @@ class BoostSerializer : public BaseSerializationPolicy<BoostSerializer<DataType,
 
     void GetMessage()
     {
-        return fMessage;
+        /* return fMessage; */
     }
 
     void Init()
@@ -285,7 +285,7 @@ class BoostDeSerializer : public BaseSerializationPolicy<BoostDeSerializer<DataT
 
     void GetMessage()
     {
-        return fMessage;
+        /* return fMessage; */
     }
 
     void Init()
