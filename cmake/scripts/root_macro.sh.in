@@ -8,8 +8,7 @@
 # to be passed to root.
 
 # Setup the needed environment
-
-source /afs/cern.ch/ship/sw/ShipSoft/dev/FairRoot/build/config.sh " "
+source build/config.sh " "
 export ROOTEXE=@ROOT_INSTALL_DIR@/bin/root.exe
 
 if [ -e @Geant4_DIR@/env.sh ]; then
