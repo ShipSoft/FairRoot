@@ -325,6 +325,13 @@ if(NOT FAIRROOT_MINIMAL)
   SET(ROOT_INCLUDE_PATH ${CMAKE_INSTALL_PREFIX}/include)
   WRITE_CONFIG_FILE(config.sh_install)
   WRITE_CONFIG_FILE(config.csh_install)
+ # for lxplus, need to change LD_LIBRARY_PATH
+  execute_process(COMMAND lsb_release -is OUTPUT_VARIABLE distribution)
+  If(${distribution} MATCHES "ScientificCERNSLC")
+   MESSAGE("change to lcg environment") 
+   file(APPEND ${CMAKE_BINARY_DIR}/config.csh "eval \"$(/afs/cern.ch/sw/lcg/releases/lcgenv/latest/lcgenv -p /afs/cern.ch/sw/lcg/releases/LCG_82 x86_64-slc6-gcc49-opt     Python)\"\n")
+   file(APPEND ${CMAKE_BINARY_DIR}/config.sh  "eval \"$(/afs/cern.ch/sw/lcg/releases/lcgenv/latest/lcgenv -p /afs/cern.ch/sw/lcg/releases/LCG_82 x86_64-slc6-gcc49-opt     Python)\"\n")
+  EndIf()
 
 else(NOT FAIRROOT_MINIMAL)
   WRITE_MINIMAL_CONFIG_FILE(config.sh)

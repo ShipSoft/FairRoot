@@ -187,14 +187,7 @@ MACRO (GENERATE_ROOT_TEST_SCRIPT SCRIPT_FULL_NAME)
 
   file(MAKE_DIRECTORY ${new_path}/data)
 
-  CONVERT_LIST_TO_STRING(${LD_LIBRARY_PATH})
-  set(MY_LD_LIBRARY_PATH ${output})
-
-  CONVERT_LIST_TO_STRING(${ROOT_INCLUDE_PATH})
-  set(MY_ROOT_INCLUDE_PATH ${output})
-
   set(my_script_name ${SCRIPT_FULL_NAME})
-
   IF(FAIRROOTPATH)
     configure_file(${FAIRROOTPATH}/share/fairbase/cmake/scripts/root_macro.sh.in
                    ${new_path}/${shell_script_name}
