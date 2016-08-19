@@ -8,7 +8,7 @@
 # to be passed to root.
 
 # Setup the needed environment
-source build/config.sh " "
+source @CMAKE_BINARY_DIR@/config.sh " "
 export ROOTEXE=@ROOT_INSTALL_DIR@/bin/root.exe
 
 if [ -e @Geant4_DIR@/env.sh ]; then
