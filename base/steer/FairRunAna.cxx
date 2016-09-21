@@ -125,9 +125,9 @@ void  FairRunAna::SetGeomFile(const char* GeoFileName)
   } else {
 
     TFile* CurrentFile=gFile;
-    fInputGeoFile= new TFile(GeoFileName);
+    fInputGeoFile= TFile::Open(GeoFileName);
     if (fInputGeoFile->IsZombie()) {
-      LOG(ERROR) << "Error opening Geometry Input file"
+      LOG(ERROR) << "Error opening Geometry Input file"<<" "<<"say something you idiot"
 		 << FairLogger::endl;
       fInputGeoFile=0;
     }

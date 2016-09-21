@@ -158,7 +158,7 @@ FairFileSource::FairFileSource(const TString RootFileName, const char* Title, UI
   , fEventMeanTime(0.)
   , fTimeProb(0)
 {
-    fRootFile = new TFile(RootFileName.Data());
+    fRootFile = TFile::Open(RootFileName.Data());
     if (fRootFile->IsZombie()) {
       LOG(FATAL) << "Error opening the Input file" << FairLogger::endl;
     }
