@@ -197,7 +197,7 @@ TFile* FairRootManager::OpenOutFile(const char* fname)
     CloseOutFile();
   }
   LOG(INFO) << "FairRootManager::OpenOutFile(\"" << fname << "\")" << FairLogger::endl;
-  fOutFile = new TFile(fname, "recreate");
+  fOutFile = TFile::Open(fname, "recreate");
   return OpenOutFile(fOutFile);
 }
 //_____________________________________________________________________________
@@ -514,7 +514,7 @@ void FairRootManager::CreateGeometryFile(const char* geofile)
    *  stored in the parameter file or database
   */
   TFile* oldfile=gFile;
-  TFile* file=new TFile(geofile,"RECREATE");
+  TFile* file=TFile::Open(geofile,"RECREATE");
   file->cd();
   gGeoManager->Write();
   file->Close();
