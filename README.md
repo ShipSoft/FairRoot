@@ -7,6 +7,11 @@ The user can create simulated data and/or perform analysis with the same framewo
 ## License 
 FairRoot  is distributed under the terms of the GNU Lesser General Public Licence version 3 (LGPLv3).
 
+## SHiP specific installation instruction
+see  https://github.com/ShipSoft/FairShip 
+
+below are the original instructions of FairRoot 
+
 ##Getting started
 Please see : http://fairroot.gsi.de/getting_started  for  details.
 
