@@ -11,13 +11,15 @@ if [ "x$SIMPATH" == "x" ]; then
  fi 
 fi
 
-# if on lxplus
-distribution=$(lsb_release -is)
-version=$(lsb_release -rs | cut -f1 -d.)     
+if `which lsb_release > /dev/null 2>&1` ; then
+   # if on lxplus
+   distribution=$(lsb_release -is)
+   version=$(lsb_release -rs | cut -f1 -d.)
 
-if [ "$distribution$version" = "ScientificCERNSLC6" ]; then
- # operating system of last century, need newer gcc / python
-  eval "$(/afs/cern.ch/sw/lcg/releases/lcgenv/latest/lcgenv -p /afs/cern.ch/sw/lcg/releases/LCG_85 x86_64-slc6-gcc49-opt Python)"
+   if [ "$distribution$version" = "ScientificCERNSLC6" ]; then
+      # operating system of last century, need newer gcc / python
+      eval "$(/afs/cern.ch/sw/lcg/releases/lcgenv/latest/lcgenv -p /afs/cern.ch/sw/lcg/releases/LCG_87 x86_64-slc6-gcc62-opt Python)"
+   fi
 fi
 
 if [ ! -d build ]; then
@@ -27,13 +29,11 @@ installDir="${PWD/FairRoot/FairRootInst}"
 cd build
 
 export PATH=$SIMPATH/bin:$PATH
-if [ "$distribution$version" = "ScientificCERNSLC6" ]; then
- xx=$($SIMPATH/bin/fairsoft-config --cxx)
- yy=$($SIMPATH/bin/fairsoft-config --cc)
- cmake .. -DCMAKE_INSTALL_PREFIX=$installDir -DCMAKE_CXX_COMPILER=$xx -DCMAKE_C_COMPILER=$yy
-else
- cmake .. -DCMAKE_INSTALL_PREFIX=$installDir
-fi 
+xx=$($SIMPATH/bin/fairsoft-config --cxx)
+yy=$($SIMPATH/bin/fairsoft-config --cc)
+
+cmake .. -DCMAKE_INSTALL_PREFIX=$installDir -DCMAKE_CXX_COMPILER=$xx -DCMAKE_C_COMPILER=$yy
+
 make
 make install
 make test
