@@ -23,18 +23,29 @@ FairMQTestSub::FairMQTestSub()
 
 void FairMQTestSub::Run()
 {
-    std::unique_ptr<FairMQMessage> readyMsg(fTransportFactory->CreateMessage());
-    fChannels.at("control").at(0).Send(readyMsg);
-
-    std::unique_ptr<FairMQMessage> msg(fTransportFactory->CreateMessage());
-    if (fChannels.at("data").at(0).Receive(msg) >= 0)
+    std::unique_ptr<FairMQMessage> ready(fTransportFactory->CreateMessage());
+    int r1 = fChannels.at("control").at(0).Send(ready);
+    if (r1 >= 0)
     {
-        std::unique_ptr<FairMQMessage> ackMsg(fTransportFactory->CreateMessage());
-        fChannels.at("control").at(0).Send(ackMsg);
+        std::unique_ptr<FairMQMessage> msg(fTransportFactory->CreateMessage());
+        int d1 = fChannels.at("data").at(0).Receive(msg);
+        if (d1 >= 0)
+        {
+            std::unique_ptr<FairMQMessage> ack(fTransportFactory->CreateMessage());
+            int a1 = fChannels.at("control").at(0).Send(ack);
+            if (a1 < 0)
+            {
+                LOG(ERROR) << "Failed sending ack signal: a1 = " << a1;
+            }
+        }
+        else
+        {
+            LOG(ERROR) << "Failed receiving data: d1 = " << d1;
+        }
     }
     else
     {
-        LOG(ERROR) << "Test failed: size of the received message doesn't match. Expected: 0, Received: " << msg->GetSize();
+        LOG(ERROR) << "Failed sending ready signal: r1 = " << r1;
     }
 }
 

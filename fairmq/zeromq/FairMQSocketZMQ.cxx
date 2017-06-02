@@ -55,7 +55,7 @@ FairMQSocketZMQ::FairMQSocketZMQ(const string& type, const string& name, int num
 
     // Tell socket to try and send/receive outstanding messages for <linger> milliseconds before terminating.
     // Default value for ZeroMQ is -1, which is to wait forever.
-    int linger = 500;
+    int linger = 1000;
     if (zmq_setsockopt(fSocket, ZMQ_LINGER, &linger, sizeof(linger)) != 0)
     {
         LOG(ERROR) << "Failed setting ZMQ_LINGER socket option, reason: " << zmq_strerror(errno);

@@ -50,6 +50,8 @@ FairMQDevice::FairMQDevice()
     , fInitialValidationCondition()
     , fInitialValidationMutex()
     , fCatchingSignals(false)
+    , fTerminationRequested(false)
+    , fInteractiveRunning(false)
 {
 }
 
@@ -68,19 +70,30 @@ void FairMQDevice::SignalHandler(int signal)
 {
     LOG(INFO) << "Caught signal " << signal;
 
-    fState = EXITING;
-    Unblock();
-    fStateThread.interrupt();
-    fStateThread.join();
+    if (!fTerminationRequested)
+    {
+        fTerminationRequested = true;
 
-    fTerminateStateThread = boost::thread(boost::bind(&FairMQDevice::Terminate, this));
-    Shutdown();
-    fTerminateStateThread.join();
+        ChangeState(STOP);
 
-    LOG(INFO) << "Exiting.";
-    stop();
-    // std::abort();
-    exit(EXIT_FAILURE);
+        ChangeState(RESET_TASK);
+        WaitForEndOfState(RESET_TASK);
+
+        ChangeState(RESET_DEVICE);
+        WaitForEndOfState(RESET_DEVICE);
+
+        ChangeState(END);
+
+        // exit(EXIT_FAILURE);
+        fInteractiveRunning = false;
+        LOG(INFO) << "Exiting.";
+    }
+    else
+    {
+        LOG(WARN) << "Repeated termination or bad initialization? Aborting.";
+        abort();
+        // exit(EXIT_FAILURE);
+    }
 }
 
 void FairMQDevice::InitWrapper()
@@ -135,9 +148,11 @@ void FairMQDevice::InitWrapper()
         }
 
         // notify parent thread about completion of first validation.
-        boost::lock_guard<boost::mutex> lock(fInitialValidationMutex);
-        fInitialValidationFinished = true;
-        fInitialValidationCondition.notify_one();
+        {
+            lock_guard<mutex> lock(fInitialValidationMutex);
+            fInitialValidationFinished = true;
+            fInitialValidationCondition.notify_one();
+        }
 
         ++numAttempts;
         if (numAttempts > maxAttempts)
@@ -156,20 +171,12 @@ void FairMQDevice::InitWrapper()
     Init();
 
     ChangeState(internal_DEVICE_READY);
-
-    // notify parent thread about end of processing.
-    boost::lock_guard<boost::mutex> lock(fStateMutex);
-    fStateFinished = true;
-    fStateCondition.notify_one();
 }
 
 void FairMQDevice::WaitForInitialValidation()
 {
-    boost::unique_lock<boost::mutex> lock(fInitialValidationMutex);
-    while (!fInitialValidationFinished)
-    {
-        fInitialValidationCondition.wait(lock);
-    }
+    unique_lock<mutex> lock(fInitialValidationMutex);
+    fInitialValidationCondition.wait(lock, [&] () { return fInitialValidationFinished; });
 }
 
 void FairMQDevice::Init()
@@ -235,11 +242,6 @@ void FairMQDevice::InitTaskWrapper()
     InitTask();
 
     ChangeState(internal_READY);
-
-    // notify parent thread about end of processing.
-    boost::lock_guard<boost::mutex> lock(fStateMutex);
-    fStateFinished = true;
-    fStateCondition.notify_one();
 }
 
 void FairMQDevice::InitTask()
@@ -318,11 +320,6 @@ void FairMQDevice::RunWrapper()
     {
         ChangeState(internal_READY);
     }
-
-    // notify parent thread about end of processing.
-    boost::lock_guard<boost::mutex> lock(fStateMutex);
-    fStateFinished = true;
-    fStateCondition.notify_one();
 }
 
 void FairMQDevice::Run()
@@ -647,11 +644,6 @@ void FairMQDevice::ResetTaskWrapper()
     ResetTask();
 
     ChangeState(internal_DEVICE_READY);
-
-    // notify parent thread about end of processing.
-    boost::lock_guard<boost::mutex> lock(fStateMutex);
-    fStateFinished = true;
-    fStateCondition.notify_one();
 }
 
 void FairMQDevice::ResetTask()
@@ -663,11 +655,6 @@ void FairMQDevice::ResetWrapper()
     Reset();
 
     ChangeState(internal_IDLE);
-
-    // notify parent thread about end of processing.
-    boost::lock_guard<boost::mutex> lock(fStateMutex);
-    fStateFinished = true;
-    fStateCondition.notify_one();
 }
 
 void FairMQDevice::Reset()

@@ -20,6 +20,8 @@
 #include <string>
 #include <iostream>
 #include <unordered_map>
+#include <mutex>
+#include <condition_variable>
 
 #include "FairMQConfigurable.h"
 #include "FairMQStateMachine.h"
@@ -146,8 +148,8 @@ class FairMQDevice : public FairMQStateMachine, public FairMQConfigurable
   private:
     // condition variable to notify parent thread about end of initial validation.
     bool fInitialValidationFinished;
-    boost::condition_variable fInitialValidationCondition;
-    boost::mutex fInitialValidationMutex;
+    std::condition_variable fInitialValidationCondition;
+    std::mutex fInitialValidationMutex;
 
     /// Handles the initialization and the Init() method
     void InitWrapper();
@@ -173,6 +175,9 @@ class FairMQDevice : public FairMQStateMachine, public FairMQConfigurable
     /// Signal handler
     void SignalHandler(int signal);
     bool fCatchingSignals;
+    bool fTerminationRequested;
+    // Interactive state loop helper
+    std::atomic<bool> fInteractiveRunning;
 
     /// Copy Constructor
     FairMQDevice(const FairMQDevice&);

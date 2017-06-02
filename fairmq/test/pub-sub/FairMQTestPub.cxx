@@ -30,17 +30,26 @@ void FairMQTestPub::Run()
 
     if (r1 >= 0 && r2 >= 0)
     {
-        std::unique_ptr<FairMQMessage> msg(fTransportFactory->CreateMessage());
-        fChannels.at("data").at(0).Send(msg);
+        LOG(INFO) << "Received both ready signals, proceeding to publish data";
 
-        std::unique_ptr<FairMQMessage> ack1Msg(fTransportFactory->CreateMessage());
-        std::unique_ptr<FairMQMessage> ack2Msg(fTransportFactory->CreateMessage());
-        if (fChannels.at("control").at(0).Receive(ack1Msg) >= 0)
+        std::unique_ptr<FairMQMessage> msg(fTransportFactory->CreateMessage());
+        int d1 = fChannels.at("data").at(0).Send(msg);
+        if (d1 < 0)
         {
-            if (fChannels.at("control").at(0).Receive(ack2Msg) >= 0)
-            {
-                LOG(INFO) << "PUB-SUB test successfull";
-            }
+            LOG(ERROR) << "Failed sending data: d1 = " << d1;
+        }
+
+        std::unique_ptr<FairMQMessage> ack1(fTransportFactory->CreateMessage());
+        std::unique_ptr<FairMQMessage> ack2(fTransportFactory->CreateMessage());
+        int a1 = fChannels.at("control").at(0).Receive(ack1);
+        int a2 = fChannels.at("control").at(0).Receive(ack2);
+        if (a1 >= 0 && a2 >= 0)
+        {
+            LOG(INFO) << "PUB-SUB test successfull";
+        }
+        else
+        {
+            LOG(ERROR) << "Failed receiving ack signal: a1 = " << a1 << ", a2 = " << a2;
         }
     }
 }
