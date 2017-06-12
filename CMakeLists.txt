@@ -187,6 +187,7 @@ Else()
       VERSION "${FAIRROOT_VERSION}"
       SOVERSION "${FAIRROOT_MAJOR_VERSION}"
   )
+  SET(CMAKE_SHARED_LIBRARY_SUFFIX .so)
 EndIf()
 
 # Load the macro to generate the needed version info at compile time
