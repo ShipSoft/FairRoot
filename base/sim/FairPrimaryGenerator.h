@@ -25,6 +25,7 @@ the tracking from the macro (M. Al-Turany)
 #include "TNamed.h" // for TNamed
 
 #include "FairGenerator.h" // for FairGenerator
+#include "TMCProcess.h"   // for TMCProcess::kPPrimary
 
 #include "Riosfwd.h"   // for ostream
 #include "Rtypes.h"    // for Double_t, Bool_t, Int_t, etc
@@ -82,7 +83,7 @@ public:
                         Double_t vx, Double_t vy, Double_t vz,
                         Int_t parent = -1, Bool_t wanttracking = true,
                         Double_t e = -9e9, Double_t tof = 0.,
-                        Double_t weight = 0.);
+                        Double_t weight = 0., TMCProcess proc = kPPrimary );
 
   /** Clone this object (used in MT mode only) */
   virtual FairPrimaryGenerator* ClonePrimaryGenerator() const;
