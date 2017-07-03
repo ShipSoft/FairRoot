@@ -333,6 +333,8 @@ if(NOT FAIRROOT_MINIMAL)
    file(APPEND ${CMAKE_BINARY_DIR}/config.csh "eval \"$(/afs/cern.ch/sw/lcg/releases/lcgenv/latest/lcgenv -p /afs/cern.ch/sw/lcg/releases/LCG_82 x86_64-slc6-gcc49-opt     Python)\"\n")
    file(APPEND ${CMAKE_BINARY_DIR}/config.sh  "eval \"$(/afs/cern.ch/sw/lcg/releases/lcgenv/latest/lcgenv -p /afs/cern.ch/sw/lcg/releases/LCG_82 x86_64-slc6-gcc49-opt     Python)\"\n")
   EndIf()
+   file(APPEND ${CMAKE_BINARY_DIR}/config.csh  "source ${SIMPATH}/bin/geant4.csh \n")
+   file(APPEND ${CMAKE_BINARY_DIR}/config.sh   "source ${SIMPATH}/bin/geant4.sh \n")
 
 else(NOT FAIRROOT_MINIMAL)
   WRITE_MINIMAL_CONFIG_FILE(config.sh)
