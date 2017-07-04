@@ -18,7 +18,7 @@ if `which lsb_release > /dev/null 2>&1` ; then
 
    if [ "$distribution$version" = "ScientificCERNSLC6" ]; then
       # operating system of last century, need newer gcc / python
-      eval "$(/afs/cern.ch/sw/lcg/releases/lcgenv/latest/lcgenv -p /afs/cern.ch/sw/lcg/releases/LCG_87 x86_64-slc6-gcc62-opt Python)"
+      eval "$(/cvmfs/sft.cern.ch/lcg/releases/lcgenv/latest/lcgenv -p /cvmfs/sft.cern.ch/lcg/releases/LCG_87 x86_64-slc6-gcc62-opt Python)"
    fi
 fi
 
@@ -32,7 +32,7 @@ export PATH=$SIMPATH/bin:$PATH
 xx=$($SIMPATH/bin/fairsoft-config --cxx)
 yy=$($SIMPATH/bin/fairsoft-config --cc)
 
-cmake .. -DCMAKE_INSTALL_PREFIX=$installDir -DCMAKE_CXX_COMPILER=$xx -DCMAKE_C_COMPILER=$yy
+cmake .. -DCMAKE_INSTALL_PREFIX=$installDir DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_CXX_COMPILER=$xx -DCMAKE_C_COMPILER=$yy
 
 make
 make install
