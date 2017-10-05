@@ -32,7 +32,7 @@ export PATH=$SIMPATH/bin:$PATH
 xx=$($SIMPATH/bin/fairsoft-config --cxx)
 yy=$($SIMPATH/bin/fairsoft-config --cc)
 
-cmake .. -DCMAKE_INSTALL_PREFIX=$installDir -DCMAKE_CXX_COMPILER=$xx -DCMAKE_C_COMPILER=$yy
+cmake .. -DCMAKE_INSTALL_PREFIX=$installDir -DCMAKE_CXX_COMPILER=$xx -DCMAKE_C_COMPILER=$yy -DZeroMQ_NO_DEPRECATED=ON
 
 make
 make install

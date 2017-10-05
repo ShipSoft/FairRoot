@@ -3,6 +3,7 @@
 set(GOPATH ${CMAKE_SOURCE_DIR}/examples/advanced/GoTutorial)
 set(ENV{GOPATH} "${GOPATH}")
 
+message("go installation ${GOPATH} ?)
 build_go_package(go-processor "${GOPATH}")
 build_go_package(go-sink "${GOPATH}")
 
