@@ -188,7 +188,7 @@ find_package(Protobuf)
 find_package(Msgpack)
 find_package(FlatBuffers)
 find_package(DDS)
-find_package(Go)
+# the setup for this does not work, cmake errors. find_package(Go)
 find_package(GSL)
 
 If(WITH_DBASE)
