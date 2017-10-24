@@ -575,9 +575,9 @@ void FairLogger::LogFatalMessage(std::ostream& strm)
     freopen(corefile, "w", stderr);
     gSystem->StackTrace();
     fclose(stderr);
-    exit(1);
+    throw std::exception();
   } else {
-    exit(1);
+    throw std::exception();
   }
 
 }
