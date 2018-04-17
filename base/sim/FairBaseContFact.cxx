@@ -27,7 +27,12 @@ class FairParSet;
 
 ClassImp(FairBaseContFact)
 
-static FairBaseContFact gFairBaseContFact;
+FairBaseContFact&  GetFairBaseContFact() {
+      static FairBaseContFact instance;
+      return instance;
+}
+#define gFairBaseContFact GetFairBaseContFact()
+
 
 FairBaseContFact::FairBaseContFact()
   :FairContFact()
