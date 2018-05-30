@@ -46,7 +46,7 @@
 #include "TRandom.h"                    // for TRandom, gRandom
 #include "TTree.h"                      // for TTree
 #include "TRefArray.h"                  // for TRefArray
-#include "TMCAutoLock.h"
+// #include "TMCAutoLock.h"
 
 #include <stdlib.h>                     // for exit
 #include <string.h>                     // for NULL, strcmp
@@ -68,11 +68,13 @@ using std::list;
 using std::pair;
 using std::set;
 
+/*
 namespace {
   // Define mutexes per operation which modify shared data
   TMCMutex createMutex = TMCMUTEX_INITIALIZER;
   TMCMutex deleteMutex = TMCMUTEX_INITIALIZER;
 }
+*/
 
 //_____________________________________________________________________________
 Int_t   FairRootManager::fgCounter = 0;
@@ -129,7 +131,7 @@ FairRootManager::FairRootManager()
 {
   LOG(debug) << "FairRootManager::FairRootManager: going to lock " << this;
 
-  TMCAutoLock lk(&createMutex);
+//  TMCAutoLock lk(&createMutex);
 
   // Set Id
   fId = fgCounter;
@@ -137,7 +139,7 @@ FairRootManager::FairRootManager()
   // Increment counter
   ++fgCounter;
 
-  lk.unlock();
+ // lk.unlock();
 
   LOG(debug) << "Released lock and done FairRootManager::FairRootManager in "
     << fId << " " << this;
@@ -165,7 +167,7 @@ FairRootManager::~FairRootManager()
   delete fSourceChain;
 
   // Global cleanup
-  TMCAutoLock lk(&deleteMutex);
+//  TMCAutoLock lk(&deleteMutex);
 
   LOG(debug) << "FairRootManager::~FairRootManager: going to lock "
     << fId << " " << this;
@@ -173,7 +175,7 @@ FairRootManager::~FairRootManager()
   --fgCounter;
 
   //
-  lk.unlock();
+ // lk.unlock();
 
   LOG(debug) << "Released lock and done FairRootManager::~FairRootManager in "
     << fId << " " << this;
