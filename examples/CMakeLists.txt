@@ -37,8 +37,4 @@ If(Boost_FOUND AND POS_C++11 AND ZeroMQ_FOUND AND HAS_CXX11_PATTERN1)
   add_subdirectory(advanced/Region)
 EndIf()
 
-If(Go_FOUND AND ZeroMQ_FOUND)
-  add_subdirectory(advanced/GoTutorial)
-EndIf()
-
 add_subdirectory(advanced/MbsTutorial)
