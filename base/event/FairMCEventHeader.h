@@ -102,7 +102,7 @@ class FairMCEventHeader : public TNamed
     Double32_t fRotZ;        ///  Rotation around z-axis (event plane) [rad]
 
 
-    ClassDef(FairMCEventHeader,2);
+    ClassDef(FairMCEventHeader,3);
 
 };
 

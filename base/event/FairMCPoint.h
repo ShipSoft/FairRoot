@@ -121,7 +121,7 @@ class FairMCPoint : public FairMultiLinkedData_Interface
     Double32_t fX, fY, fZ;        ///< Position of hit [cm]
 
 
-    ClassDef(FairMCPoint,5)
+    ClassDef(FairMCPoint,6)
 
 };
 
